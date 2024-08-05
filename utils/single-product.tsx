@@ -72,7 +72,6 @@ export const getAvailableFilters = (
                     ]
                 }
             } else if (Array.isArray(filterItem)) {
-                console.log("passing", filterItem.map((elt: ProductSizeItem) => elt.title));
                 if (filterItem.map((elt: ProductSizeItem) => elt.title)?.includes(value)) {
                     return [
                         value,
@@ -170,3 +169,16 @@ export const isItemAvailable = (
     });
     return itemChecks.some((elt) => elt);
 }
+
+  export const getAllParams = (searchParams: IterableIterator<[string, string]>): Record<string, string> => {
+    const params: Record<string, string> = {};
+    const searchParamsArray = Array.from(searchParams);
+    for (const [key, value] of searchParamsArray) {
+      params[key] = value;
+    }
+    return params;
+  };
+
+  export const isObjectLengthValid = (obj: Record<string, string>, length: number): boolean => {
+    return Object.keys(obj).length === length;
+  };

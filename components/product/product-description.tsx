@@ -3,6 +3,7 @@ import {ProductItem} from 'lib/shopify/types';
 import { Suspense } from 'react';
 import { VariantSelector } from './variant-selector';
 import Prose from "../prose";
+import {AddToCart} from "../cart/add-to-cart";
 
 export function ProductDescription({ product }: { product: ProductItem }) {
 
@@ -28,9 +29,9 @@ export function ProductDescription({ product }: { product: ProductItem }) {
         />
       ) : null}
 
-      {/*<Suspense fallback={null}>*/}
-      {/*  <AddToCart variants={product.sizes} availableForSale={product.for_sale} />*/}
-      {/*</Suspense>*/}
+      <Suspense fallback={null}>
+        <AddToCart product={product} />
+      </Suspense>
     </>
   );
 }

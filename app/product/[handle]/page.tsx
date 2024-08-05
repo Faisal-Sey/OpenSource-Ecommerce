@@ -5,7 +5,7 @@ import { GridTileImage } from 'components/grid/tile';
 import Footer from 'components/layout/footer';
 import { Gallery } from 'components/product/gallery';
 import { ProductDescription } from 'components/product/product-description';
-import {ProductImage, ProductItem} from 'lib/shopify/types';
+import {ProductItem} from 'lib/shopify/types';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import {getProduct} from "../../../lib/axios";
@@ -50,7 +50,6 @@ export async function generateMetadata({
 
 export default async function ProductPage({ params }: { params: { handle: string } }) {
   const product = await getProduct(params.handle);
-  console.log("product", product);
 
   if (!product) return notFound();
 
@@ -64,12 +63,7 @@ export default async function ProductPage({ params }: { params: { handle: string
                 <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
               }
             >
-              <Gallery
-                images={product.images.map((image: ProductImage) => ({
-                  src: image.image_path,
-                  altText: image.name
-                }))}
-              />
+              <Gallery images={product.images} />
             </Suspense>
           </div>
 

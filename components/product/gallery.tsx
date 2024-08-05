@@ -6,8 +6,9 @@ import { createUrl } from 'lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
+import {ProductImage} from "../../lib/shopify/types";
 
-export function Gallery({ images }: { images: { src: string; altText: string }[] }) {
+export function Gallery({ images }: { images: ProductImage[] }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const imageSearchParam = searchParams.get('image');
@@ -34,8 +35,8 @@ export function Gallery({ images }: { images: { src: string; altText: string }[]
             className="h-full w-full object-contain"
             fill
             sizes="(min-width: 1024px) 66vw, 100vw"
-            alt={images[imageIndex]?.altText as string}
-            src={images[imageIndex]?.src as string}
+            alt={images[imageIndex]?.name as string}
+            src={images[imageIndex]?.image_path as string}
             priority={true}
           />
         )}
@@ -71,10 +72,10 @@ export function Gallery({ images }: { images: { src: string; altText: string }[]
             const isActive = index === imageIndex;
             const imageSearchParams = new URLSearchParams(searchParams.toString());
 
-            imageSearchParams.set('image', index.toString());
+            imageSearchParams.set('image', String(index));
 
             return (
-              <li key={image.src} className="h-20 w-20">
+              <li key={image.image_path} className="h-20 w-20">
                 <Link
                   aria-label="Enlarge product image"
                   href={createUrl(pathname, imageSearchParams)}
@@ -82,8 +83,8 @@ export function Gallery({ images }: { images: { src: string; altText: string }[]
                   className="h-full w-full"
                 >
                   <GridTileImage
-                    alt={image.altText}
-                    src={image.src}
+                    alt={image.name}
+                    src={image.image_path}
                     width={80}
                     height={80}
                     active={isActive}

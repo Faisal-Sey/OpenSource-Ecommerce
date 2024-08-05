@@ -1,6 +1,11 @@
 import axios, {AxiosResponse} from "axios";
-import {Menu, ProductItem} from "../shopify/types";
-import {constructGetSingleProductUrl, getAllMenusUrl, getCollectionProductsUrl} from "./endpoints";
+import {Menu, ProductCart, ProductItem} from "../shopify/types";
+import {
+    constructGetSingleProductCartUrl,
+    constructGetSingleProductUrl, createCartUrl,
+    getAllMenusUrl,
+    getCollectionProductsUrl
+} from "./endpoints";
 
 
 export const Api = axios.create({
@@ -41,6 +46,36 @@ export async function getCollectionProducts(productLocation: string[]): Promise<
 export async function getProduct(productId: string): Promise<ProductItem | null> {
     try {
         const res: AxiosResponse = await Api.get(constructGetSingleProductUrl(productId));
+        return res.data;
+
+    } catch (err) {
+        return null;
+    }
+}
+
+export async function getCart(cartId: string): Promise<ProductCart | null> {
+    try {
+        const res: AxiosResponse = await Api.get(constructGetSingleProductCartUrl(cartId));
+        return res.data;
+
+    } catch (err) {
+        return null;
+    }
+}
+
+export async function createCart(): Promise<ProductCart | null> {
+    try {
+        const res: AxiosResponse = await Api.post(createCartUrl, {});
+        return res.data;
+
+    } catch (err) {
+        return null;
+    }
+}
+
+export async function addToCart(cartId: string, cartInfo: any): Promise<ProductCart | null> {
+    try {
+        const res: AxiosResponse = await Api.patch(constructGetSingleProductCartUrl(cartId), cartInfo);
         return res.data;
 
     } catch (err) {

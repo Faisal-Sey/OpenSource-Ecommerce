@@ -1,11 +1,25 @@
 'use server';
 
 import { TAGS } from 'lib/constants';
-import { addToCart, createCart, getCart, removeFromCart, updateCart } from 'lib/shopify';
+import {removeFromCart, updateCart} from 'lib/shopify';
 import { revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
+import {addToCart, createCart, getCart} from "../../lib/axios";
+import {isObjectLengthValid} from "../../utils/single-product";
+import {ProductItem} from "../../lib/shopify/types";
 
-export async function addItem(prevState: any, selectedVariantId: string | undefined) {
+export async function addItem(
+    prevState: any,
+    {
+      selectedVariant,
+      optionKeys,
+        product
+    }: {
+      selectedVariant: Record<string, string>;
+      optionKeys: string[],
+      product: ProductItem
+    }
+) {
   let cartId = cookies().get('cartId')?.value;
   let cart;
 
@@ -15,16 +29,29 @@ export async function addItem(prevState: any, selectedVariantId: string | undefi
 
   if (!cartId || !cart) {
     cart = await createCart();
-    cartId = cart.id;
-    cookies().set('cartId', cartId);
+    if (cart) {
+      cartId = cart.id as string;
+      cookies().set('cartId', cartId);
+    }
   }
 
-  if (!selectedVariantId) {
+  if (!isObjectLengthValid(selectedVariant, optionKeys.length)) {
     return 'Missing product variant ID';
   }
 
   try {
-    await addToCart(cartId, [{ merchandiseId: selectedVariantId, quantity: 1 }]);
+    if (cartId) {
+      const image = selectedVariant?.image;
+      delete selectedVariant?.image;
+      const cartInfo = {
+        product_id: product.id,
+        total_amount: product.price,
+        image_id: product.images[parseInt(image || "0")]?.id,
+        quantity: 1,
+        product_size: selectedVariant
+      }
+      await addToCart(cartId, cartInfo);
+    }
     revalidateTag(TAGS.cart);
   } catch (e) {
     return 'Error adding item to cart';

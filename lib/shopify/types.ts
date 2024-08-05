@@ -137,6 +137,21 @@ export type ProductItem = {
   updated_on: string;
 };
 
+export type ProductCartItem = {
+  id: string;
+  name: string;
+  values: string[];
+};
+
+export type ProductCart = {
+  id: ID;
+  checkout_url: string;
+  cart_items: ProductCartItem[];
+  total_amount: number;
+  total_taxed: number;
+  currency: Currency;
+};
+
 export type ProductOption = {
   id: string;
   name: string;

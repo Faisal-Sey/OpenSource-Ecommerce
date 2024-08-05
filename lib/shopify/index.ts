@@ -259,7 +259,6 @@ export async function getCart(cartId: string): Promise<Cart | undefined> {
     cache: 'no-store'
   });
 
-  // Old carts becomes `null` when you checkout.
   if (!res.body.data.cart) {
     return undefined;
   }
