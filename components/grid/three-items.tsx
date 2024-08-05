@@ -1,14 +1,14 @@
 import { GridTileImage } from 'components/grid/tile';
-import { getCollectionProducts } from 'lib/shopify';
-import type { Product } from 'lib/shopify/types';
+import type {ProductItem} from 'lib/shopify/types';
 import Link from 'next/link';
+import {getCollectionProducts} from "../../lib/axios";
 
 function ThreeItemGridItem({
   item,
   size,
   priority
 }: {
-  item: Product;
+  item: ProductItem;
   size: 'full' | 'half';
   priority?: boolean;
 }) {
@@ -16,20 +16,20 @@ function ThreeItemGridItem({
     <div
       className={size === 'full' ? 'md:col-span-4 md:row-span-2' : 'md:col-span-2 md:row-span-1'}
     >
-      <Link className="relative block aspect-square h-full w-full" href={`/product/${item.handle}`}>
+      <Link className="relative block aspect-square h-full w-full" href={`/product/${item.id}`}>
         <GridTileImage
-          src={item.featuredImage.url}
+          src={item?.featured_image?.image_path || ""}
           fill
           sizes={
             size === 'full' ? '(min-width: 768px) 66vw, 100vw' : '(min-width: 768px) 33vw, 100vw'
           }
           priority={priority}
-          alt={item.title}
+          alt={item.name}
           label={{
             position: size === 'full' ? 'center' : 'bottom',
-            title: item.title as string,
-            amount: item.priceRange.maxVariantPrice.amount,
-            currencyCode: item.priceRange.maxVariantPrice.currencyCode
+            title: item.name as string,
+            amount: String(item.price),
+            currencyCode: item?.currency?.symbol
           }}
         />
       </Link>
@@ -38,13 +38,7 @@ function ThreeItemGridItem({
 }
 
 export async function ThreeItemGrid() {
-  // Collections that start with `hidden-*` are hidden from the search page.
-  // const homepageItems = await getCollectionProducts({
-  //   collection: 'hidden-homepage-featured-items'
-  // });
-
-  const homepageItems: any[] = [];
-
+  const homepageItems: ProductItem[] = await getCollectionProducts(["home/gallery"]);
   if (!homepageItems[0] || !homepageItems[1] || !homepageItems[2]) return null;
 
   const [firstProduct, secondProduct, thirdProduct] = homepageItems;

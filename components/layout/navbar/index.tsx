@@ -7,11 +7,11 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import MobileMenu from './mobile-menu';
 import Search, { SearchSkeleton } from './search';
+import {getMenu} from "../../../lib/axios";
 const { SITE_NAME } = process.env;
 
 export default async function Navbar() {
-  // const menu = await getMenu('next-js-frontend-header-menu');
-  const menu: any[] = [];
+  const menu: Menu[] = (await getMenu())?.filter((elt: Menu) => elt.title !== "Default");
 
   return (
     <nav className="relative flex items-center justify-between p-4 lg:px-6">
@@ -30,7 +30,7 @@ export default async function Navbar() {
           </Link>
           {menu.length ? (
             <ul className="hidden gap-6 text-sm md:flex md:items-center">
-              {menu.map((item: Menu) => (
+              {menu.slice(0,4).map((item: Menu) => (
                 <li key={item.title}>
                   <Link
                     href={item.path}

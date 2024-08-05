@@ -5,27 +5,26 @@ import { GridTileImage } from 'components/grid/tile';
 import Footer from 'components/layout/footer';
 import { Gallery } from 'components/product/gallery';
 import { ProductDescription } from 'components/product/product-description';
-import { HIDDEN_PRODUCT_TAG } from 'lib/constants';
-import { getProduct, getProductRecommendations } from 'lib/shopify';
-import { Image } from 'lib/shopify/types';
+import {ProductImage, ProductItem} from 'lib/shopify/types';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import {getProduct} from "../../../lib/axios";
 
 export async function generateMetadata({
   params
 }: {
   params: { handle: string };
 }): Promise<Metadata> {
-  const product = await getProduct(params.handle);
+  const product: ProductItem | null = await getProduct(params.handle);
 
   if (!product) return notFound();
 
-  const { url, width, height, altText: alt } = product.featuredImage || {};
-  const indexable = !product.tags.includes(HIDDEN_PRODUCT_TAG);
+  const { image_path, image_width, image_height, name: alt } = product.featured_image || {};
+  const indexable = true;
 
   return {
-    title: product.seo.title || product.title,
-    description: product.seo.description || product.description,
+    title: product.name,
+    description: product.description,
     robots: {
       index: indexable,
       follow: indexable,
@@ -34,13 +33,13 @@ export async function generateMetadata({
         follow: indexable
       }
     },
-    openGraph: url
+    openGraph: image_path
       ? {
           images: [
             {
-              url,
-              width,
-              height,
+              url: image_path,
+              width: image_width,
+              height: image_height,
               alt
             }
           ]
@@ -51,34 +50,12 @@ export async function generateMetadata({
 
 export default async function ProductPage({ params }: { params: { handle: string } }) {
   const product = await getProduct(params.handle);
+  console.log("product", product);
 
   if (!product) return notFound();
 
-  const productJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.title,
-    description: product.description,
-    image: product.featuredImage.url,
-    offers: {
-      '@type': 'AggregateOffer',
-      availability: product.availableForSale
-        ? 'https://schema.org/InStock'
-        : 'https://schema.org/OutOfStock',
-      priceCurrency: product.priceRange.minVariantPrice.currencyCode,
-      highPrice: product.priceRange.maxVariantPrice.amount,
-      lowPrice: product.priceRange.minVariantPrice.amount
-    }
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(productJsonLd)
-        }}
-      />
       <div className="mx-auto max-w-screen-2xl px-4">
         <div className="flex flex-col rounded-lg border border-neutral-200 bg-white p-8 md:p-12 lg:flex-row lg:gap-8 dark:border-neutral-800 dark:bg-black">
           <div className="h-full w-full basis-full lg:basis-4/6">
@@ -88,9 +65,9 @@ export default async function ProductPage({ params }: { params: { handle: string
               }
             >
               <Gallery
-                images={product.images.map((image: Image) => ({
-                  src: image.url,
-                  altText: image.altText
+                images={product.images.map((image: ProductImage) => ({
+                  src: image.image_path,
+                  altText: image.name
                 }))}
               />
             </Suspense>
@@ -100,7 +77,7 @@ export default async function ProductPage({ params }: { params: { handle: string
             <ProductDescription product={product} />
           </div>
         </div>
-        <RelatedProducts id={product.id} />
+        <RelatedProducts id={String(product.id)} />
       </div>
       <Footer />
     </>
@@ -108,7 +85,7 @@ export default async function ProductPage({ params }: { params: { handle: string
 }
 
 async function RelatedProducts({ id }: { id: string }) {
-  const relatedProducts = await getProductRecommendations(id);
+  const relatedProducts: any[] = [];
 
   if (!relatedProducts.length) return null;
 

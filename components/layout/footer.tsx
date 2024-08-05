@@ -2,8 +2,9 @@ import Link from 'next/link';
 
 import FooterMenu from 'components/layout/footer-menu';
 import LogoSquare from 'components/logo-square';
-import { getMenu } from 'lib/shopify';
 import { Suspense } from 'react';
+import {Menu} from "../../lib/shopify/types";
+import {getMenu} from "../../lib/axios";
 
 const { COMPANY_NAME, SITE_NAME } = process.env;
 
@@ -11,8 +12,8 @@ export default async function Footer() {
   const currentYear = new Date().getFullYear();
   const copyrightDate = 2024 + (currentYear > 2024 ? `-${currentYear}` : '');
   const skeleton = 'w-full h-6 animate-pulse rounded bg-neutral-200 dark:bg-neutral-700';
-  // const menu = await getMenu('next-js-frontend-footer-menu');
-  const menu: any[] = [];
+  const menu: Menu[] = (await getMenu())?.filter((elt: Menu) => elt.title !== "Default");
+
   const copyrightName = COMPANY_NAME || SITE_NAME || '';
 
   return (

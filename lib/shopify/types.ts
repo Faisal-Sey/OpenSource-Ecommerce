@@ -1,4 +1,5 @@
 export type Maybe<T> = T | null;
+export type ID = string | number;
 
 export type Connection<T> = {
   edges: Array<Edge<T>>;
@@ -64,6 +65,76 @@ export type Page = {
 export type Product = Omit<ShopifyProduct, 'variants' | 'images'> & {
   variants: ProductVariant[];
   images: Image[];
+};
+
+export type Currency = {
+  id: ID;
+  name: string;
+  symbol: string;
+}
+
+export type ImageDimension = {
+  id: ID;
+  name: string;
+  width: number;
+  height: number;
+}
+
+export type ImageSize = {
+  id: ID;
+  name: string;
+  size: string;
+}
+
+export type ProductImage = {
+  id: ID;
+  name: string;
+  image_type: string;
+  image_path: string;
+  image_width: number;
+  image_height: number;
+}
+
+export type ProductLocations = {
+  id: ID;
+  name: string;
+}
+
+export type ProductColor = {
+  id: number,
+  title: string;
+}
+
+export type ProductSizeItem = {
+  id: number,
+  title: string;
+  disabled: boolean;
+}
+
+export type ProductSize = {
+  id: number,
+  color: ProductColor;
+  sizes: ProductSizeItem[];
+  [key: string]: any;
+}
+
+export type ProductItem = {
+  id: ID;
+  name: string;
+  description?: string;
+  images: ProductImage[];
+  featured_image: ProductImage;
+  price: number;
+  high_price: number;
+  min_price: number;
+  currency: Currency;
+  url: string;
+  for_sale: boolean;
+  product_type: Menu[];
+  product_locations: ProductLocations[];
+  sizes: ProductSize[];
+  created_on: string;
+  updated_on: string;
 };
 
 export type ProductOption = {
