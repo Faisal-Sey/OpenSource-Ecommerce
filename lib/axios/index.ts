@@ -1,11 +1,13 @@
 import axios, {AxiosResponse} from "axios";
 import {Menu, ProductCart, ProductItem} from "../shopify/types";
 import {
+    constructAddItemToCartUrl,
     constructGetSingleProductCartUrl,
-    constructGetSingleProductUrl, createCartUrl,
+    constructGetSingleProductUrl, constructSingleCartItemUrl, createCartUrl,
     getAllMenusUrl,
     getCollectionProductsUrl
 } from "./endpoints";
+import {AddItemToCart, UpdateCartItem} from "./types";
 
 
 export const Api = axios.create({
@@ -65,7 +67,7 @@ export async function getCart(cartId: string): Promise<ProductCart | null> {
 
 export async function createCart(): Promise<ProductCart | null> {
     try {
-        const res: AxiosResponse = await Api.post(createCartUrl, {});
+        const res: AxiosResponse = await Api.post(createCartUrl, { currency: 1 });
         return res.data;
 
     } catch (err) {
@@ -73,12 +75,46 @@ export async function createCart(): Promise<ProductCart | null> {
     }
 }
 
-export async function addToCart(cartId: string, cartInfo: any): Promise<ProductCart | null> {
+export async function addItemToCart(cartId: string, cartInfo: AddItemToCart): Promise<ProductCart | null> {
     try {
-        const res: AxiosResponse = await Api.patch(constructGetSingleProductCartUrl(cartId), cartInfo);
+        const res: AxiosResponse = await Api.patch(
+            constructAddItemToCartUrl(cartId),
+            {cart_items: [cartInfo]}
+        );
+        console.log("data", res.data);
         return res.data;
 
-    } catch (err) {
+    } catch (err: any) {
+        console.log("err", err.response.data);
+        return null;
+    }
+}
+
+export async function updateCartItem(cartItemId: string, cartItemInfo: UpdateCartItem): Promise<ProductCart | null> {
+    try {
+        const res: AxiosResponse = await Api.patch(
+            constructSingleCartItemUrl(cartItemId),
+            cartItemInfo
+        );
+        console.log("data", res.data);
+        return res.data;
+
+    } catch (err: any) {
+        console.log("err", err.response.data);
+        return null;
+    }
+}
+
+export async function removeCartItem(cartItemId: string): Promise<ProductCart | null> {
+    try {
+        const res: AxiosResponse = await Api.delete(
+            constructSingleCartItemUrl(cartItemId)
+        );
+        console.log("item deleted", res.data);
+        return res.data;
+
+    } catch (err: any) {
+        console.log("err", err.response.data);
         return null;
     }
 }

@@ -138,9 +138,12 @@ export type ProductItem = {
 };
 
 export type ProductCartItem = {
-  id: string;
-  name: string;
-  values: string[];
+    id: ID;
+    product: ProductItem;
+    image: ProductImage;
+    quantity: number;
+    total_amount: number;
+    product_size: any;
 };
 
 export type ProductCart = {
@@ -150,6 +153,7 @@ export type ProductCart = {
   total_amount: number;
   total_taxed: number;
   currency: Currency;
+  total_quantity: number;
 };
 
 export type ProductOption = {

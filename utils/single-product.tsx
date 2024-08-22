@@ -180,5 +180,5 @@ export const isItemAvailable = (
   };
 
   export const isObjectLengthValid = (obj: Record<string, string>, length: number): boolean => {
-    return Object.keys(obj).length === length;
+    return Object.keys(obj).length >= length;
   };
