@@ -1,11 +1,12 @@
 import clsx from 'clsx';
 import { Suspense } from 'react';
 
-import { getCollections } from 'lib/shopify';
 import FilterList from './filter';
+import {Menu} from "../../../lib/shopify/types";
+import {getMenu} from "../../../lib/axios";
 
 async function CollectionList() {
-  const collections = await getCollections();
+  const collections: Menu[] = (await getMenu())?.filter((elt: Menu) => elt.title !== "Default");
   return <FilterList list={collections} title="Collections" />;
 }
 

@@ -4,10 +4,15 @@ import {
     constructAddItemToCartUrl,
     constructGetSingleProductCartUrl,
     constructGetSingleProductUrl, constructSingleCartItemUrl, createCartUrl,
-    getAllMenusUrl,
+    getAllMenusUrl, getAllProductsUrl,
     getCollectionProductsUrl
 } from "./endpoints";
-import {AddItemToCart, UpdateCartItem} from "./types";
+import {
+    AddItemToCart,
+    PaginatedQueryResult,
+    ProductSearch,
+    UpdateCartItem
+} from "./types";
 
 
 export const Api = axios.create({
@@ -52,6 +57,20 @@ export async function getProduct(productId: string): Promise<ProductItem | null>
 
     } catch (err) {
         return null;
+    }
+}
+
+export async function getAllProductsBySearch(
+    searchQuery: ProductSearch
+): Promise<PaginatedQueryResult | null> {
+    try {
+        const res: AxiosResponse = await Api.post(getAllProductsUrl, {
+            ...searchQuery,
+            sort_key: searchQuery.sort_key.toLowerCase()
+        });
+        return res.data;
+    } catch (err) {
+        return null
     }
 }
 

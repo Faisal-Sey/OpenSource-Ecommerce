@@ -3,6 +3,7 @@
 export const getAllMenusUrl = "/products/menus/";
 export const getCollectionProductsUrl = "/products/filter/";
 export const getProductUrl = "/products/:id/";
+export const getAllProductsUrl = "/products/search/";
 
 // Post Queries
 export const createCartUrl = "/products/carts/";
