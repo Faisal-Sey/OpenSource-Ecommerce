@@ -3,10 +3,10 @@ import { Suspense } from 'react';
 
 import FilterList from './filter';
 import {Menu} from "../../../lib/shopify/types";
-import {getMenu} from "../../../lib/axios";
+import {getMenus} from "../../../lib/axios";
 
 async function CollectionList() {
-  const collections: Menu[] = (await getMenu())?.filter((elt: Menu) => elt.title !== "Default");
+  const collections: Menu[] = (await getMenus())?.filter((elt: Menu) => elt.title !== "Default");
   return <FilterList list={collections} title="Collections" />;
 }
 

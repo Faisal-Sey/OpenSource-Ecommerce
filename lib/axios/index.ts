@@ -3,8 +3,12 @@ import {Menu, ProductCart, ProductItem} from "../shopify/types";
 import {
     constructAddItemToCartUrl,
     constructGetSingleProductCartUrl,
-    constructGetSingleProductUrl, constructSingleCartItemUrl, createCartUrl,
-    getAllMenusUrl, getAllProductsUrl,
+    constructGetSingleProductUrl,
+    constructSingleCartItemUrl,
+    constructSingleMenuByTitleItemUrl,
+    createCartUrl,
+    getAllMenusUrl,
+    getAllProductsUrl,
     getCollectionProductsUrl
 } from "./endpoints";
 import {
@@ -20,20 +24,33 @@ export const Api = axios.create({
     baseURL: process.env.API_URL
 })
 
-export async function getMenu(): Promise<Menu[]> {
+export async function getMenus(): Promise<Menu[]> {
     try {
         const res: AxiosResponse = await Api.get(getAllMenusUrl);
 
         return (
-            res.data?.map((item: { title: string; url: string }) => ({
+            res.data?.map((
+                item: { title: string; url: string, path: string }
+            ) => ({
                 title: item.title,
-                path: item.url,
+                url: item.url,
+                path: item.path,
             })) || []
         );
     } catch (err) {
         return []
     }
+}
 
+export async function getMenu(title: string): Promise<Menu | null> {
+    try {
+        const res: AxiosResponse = await Api.get(constructSingleMenuByTitleItemUrl(title));
+
+        return res.data;
+    } catch (err) {
+        console.error("get menu failed: ", err);
+        return null
+    }
 }
 
 export async function getCollectionProducts(productLocation: string[]): Promise<ProductItem[]> {

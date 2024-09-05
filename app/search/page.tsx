@@ -3,6 +3,7 @@ import ProductGridItems from 'components/layout/product-grid-items';
 import { defaultSort, sorting } from 'lib/constants';
 import {getAllProductsBySearch} from "../../lib/axios";
 import {ProductItem} from "../../lib/shopify/types";
+import {PaginatedQueryResult} from "../../lib/axios/types";
 
 export const metadata = {
   title: 'Search',
@@ -17,19 +18,17 @@ export default async function SearchPage({
   const { sort, q: searchValue } = searchParams as { [key: string]: string };
   const { sortKey, reverse } = sorting.find((item) => item.slug === sort) || defaultSort;
 
-  const paginatedQueryResult = await getAllProductsBySearch({
+  const paginatedQueryResult: PaginatedQueryResult | null = await getAllProductsBySearch({
     query: searchValue,
     sort_key: sortKey,
     reverse,
     page_number: 1,
     items_per_page: 20
   });
-  console.log("products", paginatedQueryResult);
   let products: ProductItem[] = [];
   let resultsText: string = "result";
   if (paginatedQueryResult) {
     products = paginatedQueryResult?.data;
-    console.log("products", products);
     resultsText = products.length > 1 ? 'results' : 'result';
   }
 

@@ -43,7 +43,13 @@ export type Image = {
 
 export type Menu = {
   title: string;
+  url: string;
   path: string;
+  description: string;
+  seo?: {
+    title: string;
+    description: string;
+  }
 };
 
 export type Money = {

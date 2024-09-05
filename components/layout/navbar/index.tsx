@@ -7,11 +7,11 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import MobileMenu from './mobile-menu';
 import Search, { SearchSkeleton } from './search';
-import {getMenu} from "../../../lib/axios";
+import {getMenus} from "../../../lib/axios";
 const { SITE_NAME } = process.env;
 
 export default async function Navbar() {
-  const menu: Menu[] = (await getMenu())?.filter((elt: Menu) => elt.title !== "Default");
+  const menu: Menu[] = (await getMenus())?.filter((elt: Menu) => elt.title !== "Default");
 
   return (
     <nav className="relative flex items-center justify-between p-4 lg:px-6">

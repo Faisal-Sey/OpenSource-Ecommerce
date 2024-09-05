@@ -1,6 +1,8 @@
 
 // Get Queries
 export const getAllMenusUrl = "/products/menus/";
+export const singleMenuUrl = "/products/menus/:id/";
+export const singleMenuByTitleUrl = "/products/menus/title/:title/";
 export const getCollectionProductsUrl = "/products/filter/";
 export const getProductUrl = "/products/:id/";
 export const getAllProductsUrl = "/products/search/";
@@ -23,3 +25,7 @@ export const constructAddItemToCartUrl = (id: string) =>
 
 export const constructSingleCartItemUrl = (id: string) =>
     singleCartItemUrl.replace(":id", id);
+export const constructSingleMenuItemUrl = (id: string) =>
+    singleMenuUrl.replace(":id", id);
+export const constructSingleMenuByTitleItemUrl = (title: string) =>
+    singleMenuByTitleUrl.replace(":title", title);
