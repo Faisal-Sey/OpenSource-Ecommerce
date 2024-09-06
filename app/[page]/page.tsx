@@ -24,11 +24,8 @@ export async function generateMetadata({
   };
 }
 
-export async function getStaticPaths() {
-  return {
-    paths: [], // No pre-generated paths
-    fallback: 'blocking', // Serve dynamic pages on-demand
-  };
+export async function generateStaticParams() {
+  return ["search"]
 }
 
 export default async function Page({ params }: { params: { page: string } }) {
