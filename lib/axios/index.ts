@@ -30,11 +30,17 @@ export async function getMenus(): Promise<Menu[]> {
 
         return (
             res.data?.map((
-                item: { title: string; url: string, path: string }
+                item: {
+                    title: string;
+                    url: string,
+                    path: string,
+                    updated_on: string
+                }
             ) => ({
                 title: item.title,
                 url: item.url,
                 path: item.path,
+                updated_on: item.updated_on
             })) || []
         );
     } catch (err) {

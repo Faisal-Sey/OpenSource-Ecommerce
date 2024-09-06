@@ -46,6 +46,8 @@ export type Menu = {
   url: string;
   path: string;
   description: string;
+  created_on: string;
+  updated_on: string;
   seo?: {
     title: string;
     description: string;
