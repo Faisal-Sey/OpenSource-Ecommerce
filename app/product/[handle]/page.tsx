@@ -48,8 +48,11 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams() {
-  return [1]
+export async function getStaticPaths() {
+  return {
+    paths: [], // No pre-generated paths
+    fallback: 'blocking', // Serve dynamic pages on-demand
+  };
 }
 
 export default async function ProductPage({ params }: { params: { handle: string } }) {
