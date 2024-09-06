@@ -24,6 +24,10 @@ export async function generateMetadata({
   };
 }
 
+export async function generateStaticParams() {
+  return [""]
+}
+
 export default async function Page({ params }: { params: { page: string } }) {
   const page = await getPage(params.page);
 
