@@ -48,10 +48,6 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams() {
-  return [1]
-}
-
 export default async function ProductPage({ params }: { params: { handle: string } }) {
   const product = await getProduct(params.handle);
 

@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import Grid from 'components/grid';
 import ProductGridItems from 'components/layout/product-grid-items';
 import { defaultSort, sorting } from 'lib/constants';
-import {getAllProductsBySearch, getMenu, getMenus} from "../../../lib/axios";
+import {getAllProductsBySearch, getMenu} from "../../../lib/axios";
 import {PaginatedQueryResult} from "../../../lib/axios/types";
 import {ProductItem} from "../../../lib/shopify/types";
 
@@ -22,16 +22,6 @@ export async function generateMetadata({
     description:
       collection?.seo?.description || collection.description || `${collection.title} products`
   };
-}
-
-export async function generateStaticParams() {
-  // Fetch all collections
-  const collections = await getMenus();
-
-  // Return the params with collection titles
-  return collections.map((collection: { title: string }) => ({
-    collection: collection.title.toLowerCase(),
-  }));
 }
 
 export default async function CategoryPage({
